@@ -17,7 +17,9 @@ defmodule ToDoList do
     id = if is_binary(id), do: String.to_integer(id), else: id
 
     if Enum.any?(list, fn {task_id, _} -> task_id == id end) do
-      Enum.reject(list, fn {task_id, _} -> task_id == id end)
+      list
+      |> Enum.reject(list, fn {task_id, _} -> task_id == id end)
+      |> reserids()
     else
       IO.puts("Task con ID #{id} non trovato.")
       list
@@ -60,6 +62,11 @@ defmodule ToDoList do
         IO.puts("\nInvalid option. Please try again.")
         loop(list)
     end
+  end
+
+  defp reset_ids(list) do
+    Enum.with_index(list, 1)
+    |> Enum.map(fn {_, index} = {_, task} -> {index, task} end)
   end
 
 end
